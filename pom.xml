@@ -82,6 +82,12 @@
             <groupId>org.springframework.hateoas</groupId>
             <artifactId>spring-hateoas</artifactId>
         </dependency>
+
+		<dependency>
+			<groupId>com.mybank</groupId>
+			<artifactId>mybank-commons</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
     </dependencies>
 
 

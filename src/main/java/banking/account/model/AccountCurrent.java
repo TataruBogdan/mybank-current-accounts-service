@@ -34,4 +34,5 @@ public class AccountCurrent {
     @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
+
 }

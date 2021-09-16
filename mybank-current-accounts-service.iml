@@ -109,5 +109,6 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.3.8" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context:5.3.8" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.plugin:spring-plugin-core:2.0.0.RELEASE" level="project" />
+    <orderEntry type="module" module-name="mybank-commons" />
   </component>
 </module>
