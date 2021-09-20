@@ -10,11 +10,9 @@ public interface AccountCurrentService {
 
 
     List<AccountCurrentDTO> getAll();
-    Optional<AccountCurrentDTO> getById(String id);
+    Optional<AccountCurrentDTO> getByIban(String iban);
     void deleteById(String id);
-    void save (AccountCurrentDTO accountCurrentDTO);
-
-
-
+    //void saveIndividual(int individualId, String iban);
+    AccountCurrentDTO createIndividualAccount(int individualId);
 
 }

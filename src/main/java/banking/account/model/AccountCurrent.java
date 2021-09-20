@@ -23,16 +23,13 @@ public class AccountCurrent {
     private String iban;
 
     private Double balance;
-    private Integer individual_id;
+    private Integer individualId;
     private Date startDate;
 
     @Enumerated(EnumType.STRING)
     private CurrentStatus currentStatus;
 
     private boolean primaryAccount;
-
-    @Enumerated(EnumType.STRING)
-    private AccountType accountType;
 
 
 }
