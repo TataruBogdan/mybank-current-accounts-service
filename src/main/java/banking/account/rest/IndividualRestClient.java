@@ -1,7 +1,6 @@
 package banking.account.rest;
 
 import banking.commons.dto.IndividualDTO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -9,8 +8,7 @@ import org.springframework.web.client.RestTemplate;
 public class IndividualRestClient{
 
 
-    @Autowired
-    RestTemplate restTemplate = new RestTemplate();
+    private RestTemplate restTemplate;
 
 
     public IndividualDTO getIndividualById(Integer id) {
