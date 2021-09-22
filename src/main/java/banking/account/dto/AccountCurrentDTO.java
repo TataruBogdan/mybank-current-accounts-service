@@ -7,17 +7,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-//package banking.account.dto;
-//
-//
-//import banking.account.model.AccountType;
-//import banking.account.model.CurrentStatus;
-//import lombok.Data;
-//
-//import javax.persistence.Id;
-//import javax.validation.constraints.NotNull;
-//import java.util.Date;
-//
+
 @Data
 public class AccountCurrentDTO {
 

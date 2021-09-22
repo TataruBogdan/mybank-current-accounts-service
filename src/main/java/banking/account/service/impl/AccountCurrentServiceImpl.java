@@ -30,7 +30,6 @@ public class AccountCurrentServiceImpl implements AccountCurrentService {
     private final AccountCurrentMapper accountCurrentMapper;
 
 
-
     @Override
     public List<AccountCurrentDTO> getAll() {
         return accountRepository.findAll()
@@ -44,6 +43,17 @@ public class AccountCurrentServiceImpl implements AccountCurrentService {
         return accountRepository.findById(iban)
                 .map(accountCurrent -> accountCurrentMapper.accountToDTO(accountCurrent));
     }
+
+    @Override
+    public List<AccountCurrentDTO> getByIndividualId(int individualId){
+
+        List<AccountCurrent> accountRepositoryByIndividual = accountRepository.findByIndividualId(individualId);
+        List<AccountCurrentDTO> accountCurrentDTO = accountCurrentMapper.toAccountCurrentDTO(accountRepositoryByIndividual);
+
+        return accountCurrentDTO;
+
+    }
+
 
     @Override
     public void deleteById(String id) {
@@ -65,10 +75,6 @@ public class AccountCurrentServiceImpl implements AccountCurrentService {
 
         return savedAccountCurrentDTO;
     }
-
-
-
-
 
 
 }

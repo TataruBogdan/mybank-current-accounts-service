@@ -11,8 +11,8 @@ public interface AccountCurrentService {
 
     List<AccountCurrentDTO> getAll();
     Optional<AccountCurrentDTO> getByIban(String iban);
+    List<AccountCurrentDTO> getByIndividualId(int individualId);
     void deleteById(String id);
-    //void saveIndividual(int individualId, String iban);
     AccountCurrentDTO createIndividualAccount(int individualId);
 
 }
