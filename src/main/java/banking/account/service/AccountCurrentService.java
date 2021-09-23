@@ -12,6 +12,7 @@ public interface AccountCurrentService {
     List<AccountCurrentDTO> getAll();
     Optional<AccountCurrentDTO> getByIban(String iban);
     List<AccountCurrentDTO> getByIndividualId(int individualId);
+    AccountCurrentDTO updateBalanceAccount(String iban, Double balance);
     void deleteById(String id);
     AccountCurrentDTO createIndividualAccount(int individualId);
 

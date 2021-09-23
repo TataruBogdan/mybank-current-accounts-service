@@ -11,4 +11,7 @@ import java.util.List;
 public interface AccountRepository extends JpaRepository<AccountCurrent, String> {
 
     List<AccountCurrent> findByIndividualId(int individualId);
+
+    //Save exista in JPARepository
+    //AccountCurrent save(AccountCurrent accountCurrent);
 }

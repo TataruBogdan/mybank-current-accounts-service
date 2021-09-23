@@ -54,6 +54,18 @@ public class AccountCurrentServiceImpl implements AccountCurrentService {
 
     }
 
+    @Override
+    public AccountCurrentDTO updateBalanceAccount(String iban, Double balance){
+
+
+        AccountCurrent accountCurrent = accountRepository.getById(iban);
+        accountCurrent.setBalance(balance);
+        AccountCurrent savedAccountCurrent = accountRepository.save(accountCurrent);
+
+        return accountCurrentMapper.accountToDTO(savedAccountCurrent);
+
+    }
+
 
     @Override
     public void deleteById(String id) {

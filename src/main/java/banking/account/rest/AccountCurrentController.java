@@ -6,18 +6,18 @@ import banking.account.service.AccountCurrentService;
 import banking.commons.dto.IndividualDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+
 @RequiredArgsConstructor
+//@RequestMapping (value = "/account-current/update-balance/{iban}")
 @RestController
 public class AccountCurrentController {
 
@@ -44,7 +44,7 @@ public class AccountCurrentController {
         return  accountCurrentService.getAll();
     }
 
-    //TODO return 404 not ok - doar cand returneaza cont MODIFICAT headers nu este ok
+    //TODO return 404 - ok ?
     @GetMapping("/accounts-current/{iban}")
     public ResponseEntity<AccountCurrentDTO> retrieveAccountCurrent(@PathVariable String iban){
         Optional<AccountCurrentDTO> accountCurrentByIban = accountCurrentService.getByIban(iban);
@@ -52,12 +52,28 @@ public class AccountCurrentController {
         if (accountCurrentByIban.isPresent()) {
             IndividualDTO individualDTO = individualRestClient.getIndividualById(accountCurrentByIban.get().getIndividualId());
             accountCurrentByIban.get().setIndividual(individualDTO);
-            var headers = new HttpHeaders();
-            headers.add("Returned", "Account");
-            return ResponseEntity.accepted().headers(headers).body(accountCurrentByIban.get());
+            return ResponseEntity.ok(accountCurrentByIban.get()); // return 200, with json body
         }
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // return 404, with null body
     }
+
+
+
+    @PatchMapping (path = "/account-current/update-balance/{iban}")
+//    @ResponseBody - return type is String - not needed                                       // nu este JSON -> { "balance": 20(balance)} -> facem obiectul updateBalanceRequestDTO
+    public ResponseEntity<AccountCurrentDTO> updateAccountCurrentBalance(@PathVariable("iban") String iban, @RequestBody UpdateBalanceRequestDTO amount){
+
+
+            AccountCurrentDTO accountCurrentDTO = accountCurrentService.updateBalanceAccount(iban, amount.getAmount());
+
+            return ResponseEntity.ok(accountCurrentDTO);
+//            return ResponseEntity
+//                    .created(URI
+//                            .create(String.format("/{newBalance %s : %d}", accountCurrentDTO.getBalance())))
+//                    .body(accountCurrentDTO);
+
+    }
+
 
     @GetMapping(value = "/account-current/{individualId}")
     public ResponseEntity<List<AccountCurrentDTO>> retrieveAccountIndividual(@PathVariable("individualId") int individualId){
@@ -73,14 +89,15 @@ public class AccountCurrentController {
     }
 
 
+    @PostMapping(value = "/create-account/individuals/{individualId}", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE )
+    public ResponseEntity<AccountCurrentDTO> createAccountCurrent(@PathVariable("individualId") int individualId,
+                                                                  @RequestBody IndividualDTODetailsRequest individualDTODetails){
 
-    @GetMapping(value = "/create-account/individuals/{individualId}", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE )
-    public ResponseEntity<AccountCurrentDTO> createAccountCurrent(@PathVariable("individualId") int individualId){
-
-        IndividualDTO individualDTOById = individualRestClient.getIndividualById(individualId);
         AccountCurrentDTO individualAccount = accountCurrentService.createIndividualAccount(individualId);
+//        IndividualDTO individualDTOById = individualRestClient.getIndividualById(individualId);
 
-        individualAccount.setIndividual(individualDTOById);
+//        individualAccount.setIndividual(individualRestClient.getIndividualById(individualId));
+
 
         return ResponseEntity.ok(individualAccount);
     }
