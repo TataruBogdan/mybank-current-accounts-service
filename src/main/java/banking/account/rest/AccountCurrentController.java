@@ -58,19 +58,39 @@ public class AccountCurrentController {
     }
 
 
-
     @PatchMapping (path = "/account-current/update-balance/{iban}")
 //    @ResponseBody - return type is String - not needed                                       // nu este JSON -> { "balance": 20(balance)} -> facem obiectul updateBalanceRequestDTO
     public ResponseEntity<AccountCurrentDTO> updateAccountCurrentBalance(@PathVariable("iban") String iban, @RequestBody UpdateBalanceRequestDTO amount){
 
-
             AccountCurrentDTO accountCurrentDTO = accountCurrentService.updateBalanceAccount(iban, amount.getAmount());
 
             return ResponseEntity.ok(accountCurrentDTO);
-//            return ResponseEntity
-//                    .created(URI
-//                            .create(String.format("/{newBalance %s : %d}", accountCurrentDTO.getBalance())))
-//                    .body(accountCurrentDTO);
+    }
+
+
+    @PatchMapping(path = "/account-current/credit/{iban}")
+    public ResponseEntity<AccountCurrentDTO> creditedAccountCurrent(@PathVariable("iban") String iban, @RequestBody CreditAccountCurrent amount){
+
+        Optional<AccountCurrentDTO> accountCurrentDTO = accountCurrentService.getByIban(iban);
+        IndividualDTO individualById = individualRestClient.getIndividualById(accountCurrentDTO.get().getIndividualId());
+
+        AccountCurrentDTO creditBalanceAccount = accountCurrentService.creditBalanceAccount(iban, amount.getCreditAmount());
+        creditBalanceAccount.setIndividual(individualById);
+
+        return ResponseEntity.ok(creditBalanceAccount);
+
+    }
+
+    @PatchMapping(path = "/account-current/debit/{iban}")
+    public ResponseEntity<AccountCurrentDTO> debitedAccountCurrent(@PathVariable("iban") String iban, @RequestBody DebitAccountCurrent amount){
+
+        Optional<AccountCurrentDTO> accountCurrentDTO = accountCurrentService.getByIban(iban);
+        IndividualDTO individualById = individualRestClient.getIndividualById(accountCurrentDTO.get().getIndividualId());
+
+        AccountCurrentDTO debitAccountCurrentDTO = accountCurrentService.debitBalanceAccount(iban, amount.getDebitAmount());
+        debitAccountCurrentDTO.setIndividual(individualById);
+
+        return ResponseEntity.ok(debitAccountCurrentDTO);
 
     }
 
@@ -78,11 +98,15 @@ public class AccountCurrentController {
     @GetMapping(value = "/account-current/{individualId}")
     public ResponseEntity<List<AccountCurrentDTO>> retrieveAccountIndividual(@PathVariable("individualId") int individualId){
 
-
         List<AccountCurrentDTO> accountCurrentServiceByIndividual = accountCurrentService.getByIndividualId(individualId);
 
         if (accountCurrentServiceByIndividual.isEmpty()){
+
             return ResponseEntity.notFound().build();
+        }
+        IndividualDTO individualDTO = individualRestClient.getIndividualById(individualId);
+        for (AccountCurrentDTO accountCurrent: accountCurrentServiceByIndividual) {
+            accountCurrent.setIndividual(individualDTO);
         }
         return ResponseEntity.ok(accountCurrentServiceByIndividual);
 
@@ -90,21 +114,23 @@ public class AccountCurrentController {
 
 
     @PostMapping(value = "/create-account/individuals/{individualId}", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE )
-    public ResponseEntity<AccountCurrentDTO> createAccountCurrent(@PathVariable("individualId") int individualId,
-                                                                  @RequestBody IndividualDTODetailsRequest individualDTODetails){
+    public ResponseEntity<AccountCurrentDTO> createAccountCurrent(@PathVariable("individualId") int individualId){
 
         AccountCurrentDTO individualAccount = accountCurrentService.createIndividualAccount(individualId);
-//        IndividualDTO individualDTOById = individualRestClient.getIndividualById(individualId);
+        IndividualDTO individualDTOById = individualRestClient.getIndividualById(individualId);
 
-//        individualAccount.setIndividual(individualRestClient.getIndividualById(individualId));
 
+        individualAccount.setIndividual(individualDTOById);
 
         return ResponseEntity.ok(individualAccount);
     }
 
 
+    @DeleteMapping(value = "delete/account-current/{iban}")
+    public void deleteAccountFromRepository(@PathVariable("iban") String iban){
 
+        accountCurrentService.deleteAccountByIban(iban);
 
-
+    }
 
 }

@@ -20,7 +20,9 @@ public class AccountCurrentDTO {
     private boolean primaryAccount;
     private IndividualDTO individual;
 
-   // TODO 4) private IndividualDTO individual;
+
+
+    // TODO 4) private IndividualDTO individual;
     //TODO 1) creezi un proiect nou mubank-commons  in care sa strangem toate DTO urile folosite la comun de toate microserviciile
     //TODO 2) dai mvn clean install
     //TODO 3) pe care il vom importa in fiecare moicroserviciu in pom.xml ca dependency

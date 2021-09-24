@@ -66,6 +66,28 @@ public class AccountCurrentServiceImpl implements AccountCurrentService {
 
     }
 
+    @Override
+    public AccountCurrentDTO creditBalanceAccount(String iban, Double balance) {
+
+        AccountCurrent accountCurrent = accountRepository.getById(iban);
+        Double currentBalance = accountCurrent.getBalance();
+        accountCurrent.setBalance(balance + currentBalance);
+        AccountCurrent saveAccountCurrent = accountRepository.save(accountCurrent);
+
+        return accountCurrentMapper.accountToDTO(saveAccountCurrent);
+    }
+
+    @Override
+    public AccountCurrentDTO debitBalanceAccount(String iban, Double balance) {
+
+        AccountCurrent accountCurrent = accountRepository.getById(iban);
+        Double currentBalance = accountCurrent.getBalance();
+        accountCurrent.setBalance(currentBalance - balance);
+        AccountCurrent savedAccountCurrent = accountRepository.save(accountCurrent);
+
+        return accountCurrentMapper.accountToDTO(savedAccountCurrent);
+    }
+
 
     @Override
     public void deleteById(String id) {
@@ -86,6 +108,12 @@ public class AccountCurrentServiceImpl implements AccountCurrentService {
         AccountCurrentDTO savedAccountCurrentDTO = accountCurrentMapper.accountToDTO(savedAccountCurrent);
 
         return savedAccountCurrentDTO;
+    }
+
+
+    @Override
+    public void deleteAccountByIban(String iban) {
+        accountRepository.deleteById(iban);
     }
 
 

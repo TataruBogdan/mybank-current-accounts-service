@@ -23,6 +23,6 @@ public class UpdateBalanceRequestDTO {
 
     @Override
     public String toString() {
-        return "{Balance :" + amount + '}';
+        return "{Balance :" + amount + "}";
     }
 }
