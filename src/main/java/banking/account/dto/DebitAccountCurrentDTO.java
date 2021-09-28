@@ -1,13 +1,13 @@
-package banking.account.rest;
+package banking.account.dto;
 
 import lombok.Data;
 
 @Data
-public class DebitAccountCurrent {
+public class DebitAccountCurrentDTO {
 
     private Double debitAmount;
 
-    public DebitAccountCurrent(){
+    public DebitAccountCurrentDTO(){
         super();
     }
 

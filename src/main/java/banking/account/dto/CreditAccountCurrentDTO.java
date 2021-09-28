@@ -1,13 +1,13 @@
-package banking.account.rest;
+package banking.account.dto;
 
 import lombok.Data;
 
 @Data
-public class CreditAccountCurrent {
+public class CreditAccountCurrentDTO {
 
     private Double creditAmount;
 
-    public CreditAccountCurrent(){
+    public CreditAccountCurrentDTO(){
         super();
     }
 

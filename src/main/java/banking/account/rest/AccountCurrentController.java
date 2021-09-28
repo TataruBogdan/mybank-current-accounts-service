@@ -2,6 +2,9 @@ package banking.account.rest;
 
 
 import banking.account.dto.AccountCurrentDTO;
+import banking.account.dto.CreditAccountCurrentDTO;
+import banking.account.dto.DebitAccountCurrentDTO;
+import banking.account.dto.UpdateBalanceRequestDTO;
 import banking.account.service.AccountCurrentService;
 import banking.commons.dto.IndividualDTO;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +25,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class AccountCurrentController {
 
 
+
     //TODO endpoint creare cont curent: request=individual_id, response=obiectul cont current
 
     //TODO endpoint creditare cont curent: request=iban, amount reponse=200
@@ -32,6 +36,7 @@ public class AccountCurrentController {
 
     @Autowired
     private final AccountCurrentService accountCurrentService;
+
 
     @Autowired
     private IndividualRestClient individualRestClient;
@@ -69,7 +74,7 @@ public class AccountCurrentController {
 
 
     @PatchMapping(path = "/account-current/credit/{iban}")
-    public ResponseEntity<AccountCurrentDTO> creditedAccountCurrent(@PathVariable("iban") String iban, @RequestBody CreditAccountCurrent amount){
+    public ResponseEntity<AccountCurrentDTO> creditedAccountCurrent(@PathVariable("iban") String iban, @RequestBody CreditAccountCurrentDTO amount){
 
         Optional<AccountCurrentDTO> accountCurrentDTO = accountCurrentService.getByIban(iban);
         IndividualDTO individualById = individualRestClient.getIndividualById(accountCurrentDTO.get().getIndividualId());
@@ -82,7 +87,7 @@ public class AccountCurrentController {
     }
 
     @PatchMapping(path = "/account-current/debit/{iban}")
-    public ResponseEntity<AccountCurrentDTO> debitedAccountCurrent(@PathVariable("iban") String iban, @RequestBody DebitAccountCurrent amount){
+    public ResponseEntity<AccountCurrentDTO> debitedAccountCurrent(@PathVariable("iban") String iban, @RequestBody DebitAccountCurrentDTO amount){
 
         Optional<AccountCurrentDTO> accountCurrentDTO = accountCurrentService.getByIban(iban);
         IndividualDTO individualById = individualRestClient.getIndividualById(accountCurrentDTO.get().getIndividualId());

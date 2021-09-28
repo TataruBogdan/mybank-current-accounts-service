@@ -1,4 +1,4 @@
-package banking.account.rest;
+package banking.account.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
