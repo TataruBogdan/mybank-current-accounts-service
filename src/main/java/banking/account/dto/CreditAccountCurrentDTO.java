@@ -16,9 +16,4 @@ public class CreditAccountCurrentDTO {
     }
 
 
-//    @Override
-//    public String toString() {
-//        return "{Balance :" + creditAmount + "}";
-//    }
-
 }

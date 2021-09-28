@@ -90,11 +90,6 @@ public class AccountCurrentServiceImpl implements AccountCurrentService {
 
 
     @Override
-    public void deleteById(String id) {
-        accountRepository.deleteById(id);
-    }
-
-    @Override
     public AccountCurrentDTO createIndividualAccount(int individualId) {
 
         AccountCurrent accountCurrent = new AccountCurrent();
