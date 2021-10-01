@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static banking.account.idGen.IdGenerator.idGen;
 import static banking.account.model.CurrentStatus.ACTIVE;
 
 
@@ -28,6 +28,7 @@ public class AccountCurrentServiceImpl implements AccountCurrentService {
 
     @Autowired
     private final AccountCurrentMapper accountCurrentMapper;
+
 
 
     @Override
@@ -93,7 +94,7 @@ public class AccountCurrentServiceImpl implements AccountCurrentService {
     public AccountCurrentDTO createIndividualAccount(int individualId) {
 
         AccountCurrent accountCurrent = new AccountCurrent();
-        accountCurrent.setIban(UUID.randomUUID().toString());
+        accountCurrent.setIban(idGen("CURR"));
         accountCurrent.setBalance(0.0);
         accountCurrent.setIndividualId(individualId);
         accountCurrent.setStartDate(new Date());

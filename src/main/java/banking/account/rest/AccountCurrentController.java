@@ -13,14 +13,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-
 @RequiredArgsConstructor
-//@RequestMapping (value = "/account-current/update-balance/{iban}")
 @RestController
 public class AccountCurrentController {
 
@@ -41,12 +40,24 @@ public class AccountCurrentController {
     @Autowired
     private IndividualRestClient individualRestClient;
 
-
-
     //endpoint GET all accounts
     @GetMapping("/accounts-current")
-    public List<AccountCurrentDTO> retrieveAllAccounts(){
-        return  accountCurrentService.getAll();
+    public ResponseEntity<List<AccountCurrentDTO>> retrieveAllAccounts(){
+
+        List<AccountCurrentDTO> allAccountCurrentDTOS = accountCurrentService.getAll();
+        if (allAccountCurrentDTOS.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        List<AccountCurrentDTO> newAccountCurrentDTOList = new ArrayList<>();
+        for (AccountCurrentDTO accountCurrentDTO: allAccountCurrentDTOS) {
+            IndividualDTO individualById = individualRestClient.getIndividualById(accountCurrentDTO.getIndividualId());
+            accountCurrentDTO.setIndividual(individualById);
+            newAccountCurrentDTOList.add(accountCurrentDTO);
+        }
+        return ResponseEntity.ok(newAccountCurrentDTOList);
+
+
     }
 
     //TODO return 404 - ok ?
