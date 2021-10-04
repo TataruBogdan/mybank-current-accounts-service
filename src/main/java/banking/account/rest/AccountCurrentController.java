@@ -1,7 +1,7 @@
 package banking.account.rest;
 
 
-import banking.account.dto.AccountCurrentDTO;
+import banking.commons.dto.AccountCurrentDTO;
 import banking.account.dto.CreditAccountCurrentDTO;
 import banking.account.dto.DebitAccountCurrentDTO;
 import banking.account.dto.UpdateBalanceRequestDTO;
@@ -22,8 +22,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequiredArgsConstructor
 @RestController
 public class AccountCurrentController {
-
-
 
     //TODO endpoint creare cont curent: request=individual_id, response=obiectul cont current
 

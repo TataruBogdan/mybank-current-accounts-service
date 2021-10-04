@@ -1,5 +1,6 @@
 package banking.account.model;
 
+import banking.commons.dto.types.CurrentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

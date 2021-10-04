@@ -2,7 +2,7 @@ package banking.account.service.impl;
 
 
 import banking.account.dao.AccountRepository;
-import banking.account.dto.AccountCurrentDTO;
+import banking.commons.dto.AccountCurrentDTO;
 import banking.account.model.AccountCurrent;
 import banking.account.service.AccountCurrentMapper;
 import banking.account.service.AccountCurrentService;
@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static banking.account.idGen.IdGenerator.idGen;
-import static banking.account.model.CurrentStatus.ACTIVE;
+import static banking.commons.dto.types.CurrentStatus.ACTIVE;
 
 
 @RequiredArgsConstructor

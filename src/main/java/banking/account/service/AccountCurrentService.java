@@ -1,7 +1,7 @@
 package banking.account.service;
 
 
-import banking.account.dto.AccountCurrentDTO;
+import banking.commons.dto.AccountCurrentDTO;
 
 import java.util.List;
 import java.util.Optional;

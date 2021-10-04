@@ -1,7 +1,7 @@
 package banking.account.service;
 
 
-import banking.account.dto.AccountCurrentDTO;
+import banking.commons.dto.AccountCurrentDTO;
 import banking.account.model.AccountCurrent;
 import org.mapstruct.Mapper;
 
