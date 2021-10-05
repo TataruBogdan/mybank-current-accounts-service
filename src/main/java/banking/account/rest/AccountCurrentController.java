@@ -1,13 +1,12 @@
 package banking.account.rest;
 
 
-import banking.commons.dto.AccountCurrentDTO;
 import banking.account.dto.CreditAccountCurrentDTO;
 import banking.account.dto.DebitAccountCurrentDTO;
 import banking.account.dto.UpdateBalanceRequestDTO;
 import banking.account.service.AccountCurrentService;
+import banking.commons.dto.AccountCurrentDTO;
 import banking.commons.dto.IndividualDTO;
-import banking.commons.dto.TransactionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,7 +33,6 @@ public class AccountCurrentController {
 
     @Autowired
     private final AccountCurrentService accountCurrentService;
-
 
     @Autowired
     private RestClient individualRestClient;
@@ -86,22 +84,25 @@ public class AccountCurrentController {
             return ResponseEntity.ok(accountCurrentDTO);
     }
 
-    //modify AccountCurrent to be credited with tha amount from the transaction
+    //Recieve into account
+    //modify AccountCurrent to be credited with amount from the transaction
     @PatchMapping(path = "/account-current/credit/{iban}")
     public ResponseEntity<AccountCurrentDTO> creditedAccountCurrent(@PathVariable("iban") String iban, @RequestBody CreditAccountCurrentDTO amount){
 
         Optional<AccountCurrentDTO> accountCurrentDTO = accountCurrentService.getByIban(iban);
-        IndividualDTO individualById = individualRestClient.getIndividualById(accountCurrentDTO.get().getIndividualId());
 
-        TransactionDTO transactionById = transactionRestClient.getTransactionById(iban);
+        IndividualDTO individualDTOById = individualRestClient.getIndividualById(accountCurrentDTO.get().getIndividualId());
+        //TODO - AM NEVOIE DE UN ID AL TRANZACTIEI ?
+//        TransactionDTO transactionById = transactionRestClient.getTransactionById(accountCurrentDTO.get().);
         //credit the value from AccountCurrent with the value from transaction -> go to debit
-        AccountCurrentDTO creditBalanceAccount = accountCurrentService.creditBalanceAccount(iban, transactionById.getTransactionAmount());
-        creditBalanceAccount.setIndividual(individualById);
+        AccountCurrentDTO creditBalanceAccount = accountCurrentService.creditBalanceAccount(iban, amount.getCreditAmount());
+        creditBalanceAccount.setIndividual(individualDTOById);
 
         return ResponseEntity.ok(creditBalanceAccount);
 
     }
 
+    //Payment from account
     @PatchMapping(path = "/account-current/debit/{iban}")
     public ResponseEntity<AccountCurrentDTO> debitedAccountCurrent(@PathVariable("iban") String iban, @RequestBody DebitAccountCurrentDTO amount){
 
@@ -154,5 +155,7 @@ public class AccountCurrentController {
         accountCurrentService.deleteAccountByIban(iban);
 
     }
+
+
 
 }
