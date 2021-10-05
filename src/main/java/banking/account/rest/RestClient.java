@@ -1,12 +1,13 @@
 package banking.account.rest;
 
 import banking.commons.dto.IndividualDTO;
+import banking.commons.dto.TransactionDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class IndividualRestClient{
+public class RestClient {
 
     @Autowired
     private RestTemplate restTemplate;
@@ -19,4 +20,14 @@ public class IndividualRestClient{
 
         return individualDTO;
     }
+
+
+    public TransactionDTO getTransactionById(String transactionId){
+
+        TransactionDTO transactionDTO = restTemplate.getForObject("http://localhost:8500/transactions/" + transactionId, TransactionDTO.class);
+
+        return transactionDTO;
+
+    }
+
 }

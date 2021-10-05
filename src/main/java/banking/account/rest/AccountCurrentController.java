@@ -7,6 +7,7 @@ import banking.account.dto.DebitAccountCurrentDTO;
 import banking.account.dto.UpdateBalanceRequestDTO;
 import banking.account.service.AccountCurrentService;
 import banking.commons.dto.IndividualDTO;
+import banking.commons.dto.TransactionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,11 @@ public class AccountCurrentController {
 
 
     @Autowired
-    private IndividualRestClient individualRestClient;
+    private RestClient individualRestClient;
+
+    @Autowired
+    private RestClient transactionRestClient;
+
 
     //endpoint GET all accounts
     @GetMapping("/accounts-current")
@@ -81,14 +86,16 @@ public class AccountCurrentController {
             return ResponseEntity.ok(accountCurrentDTO);
     }
 
-
+    //modify AccountCurrent to be credited with tha amount from the transaction
     @PatchMapping(path = "/account-current/credit/{iban}")
     public ResponseEntity<AccountCurrentDTO> creditedAccountCurrent(@PathVariable("iban") String iban, @RequestBody CreditAccountCurrentDTO amount){
 
         Optional<AccountCurrentDTO> accountCurrentDTO = accountCurrentService.getByIban(iban);
         IndividualDTO individualById = individualRestClient.getIndividualById(accountCurrentDTO.get().getIndividualId());
 
-        AccountCurrentDTO creditBalanceAccount = accountCurrentService.creditBalanceAccount(iban, amount.getCreditAmount());
+        TransactionDTO transactionById = transactionRestClient.getTransactionById(iban);
+        //credit the value from AccountCurrent with the value from transaction -> go to debit
+        AccountCurrentDTO creditBalanceAccount = accountCurrentService.creditBalanceAccount(iban, transactionById.getTransactionAmount());
         creditBalanceAccount.setIndividual(individualById);
 
         return ResponseEntity.ok(creditBalanceAccount);
@@ -101,6 +108,7 @@ public class AccountCurrentController {
         Optional<AccountCurrentDTO> accountCurrentDTO = accountCurrentService.getByIban(iban);
         IndividualDTO individualById = individualRestClient.getIndividualById(accountCurrentDTO.get().getIndividualId());
 
+        //debit the value from AccountCurrent with the value from transaction
         AccountCurrentDTO debitAccountCurrentDTO = accountCurrentService.debitBalanceAccount(iban, amount.getDebitAmount());
         debitAccountCurrentDTO.setIndividual(individualById);
 
