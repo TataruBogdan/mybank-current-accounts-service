@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 @AllArgsConstructor
@@ -25,7 +25,7 @@ public class AccountCurrent {
 
     private Double balance;
     private Integer individualId;
-    private Date startDate;
+    private LocalDateTime startDate;
 
     @Enumerated(EnumType.STRING)
     private CurrentStatus currentStatus;

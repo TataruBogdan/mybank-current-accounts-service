@@ -2,20 +2,21 @@ package banking.account.service.impl;
 
 
 import banking.account.dao.AccountRepository;
-import banking.commons.dto.AccountCurrentDTO;
 import banking.account.model.AccountCurrent;
 import banking.account.service.AccountCurrentMapper;
 import banking.account.service.AccountCurrentService;
+import banking.commons.dto.AccountCurrentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static banking.account.idGen.IdGenerator.idGen;
+
+import static banking.commons.dto.idGen.IdGenerator.idGen;
 import static banking.commons.dto.types.CurrentStatus.ACTIVE;
 
 
@@ -97,7 +98,7 @@ public class AccountCurrentServiceImpl implements AccountCurrentService {
         accountCurrent.setIban(idGen("CURR"));
         accountCurrent.setBalance(0.0);
         accountCurrent.setIndividualId(individualId);
-        accountCurrent.setStartDate(new Date());
+        accountCurrent.setStartDate(LocalDateTime.now());
         accountCurrent.setCurrentStatus(ACTIVE);
         accountCurrent.setPrimaryAccount(true);
         AccountCurrent savedAccountCurrent = accountRepository.save(accountCurrent);

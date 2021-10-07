@@ -37,10 +37,6 @@ public class AccountCurrentController {
     @Autowired
     private RestClient individualRestClient;
 
-    @Autowired
-    private RestClient transactionRestClient;
-
-
     //endpoint GET all accounts
     @GetMapping("/accounts-current")
     public ResponseEntity<List<AccountCurrentDTO>> retrieveAllAccounts(){
@@ -57,8 +53,6 @@ public class AccountCurrentController {
             newAccountCurrentDTOList.add(accountCurrentDTO);
         }
         return ResponseEntity.ok(newAccountCurrentDTOList);
-
-
     }
 
     //TODO return 404 - ok ?
