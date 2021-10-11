@@ -2,10 +2,12 @@ package banking.account.rest;
 
 
 import banking.account.dto.CreditAccountCurrentDTO;
-import banking.account.dto.DebitAccountCurrentDTO;
 import banking.account.dto.UpdateBalanceRequestDTO;
+import banking.account.rest.client.IndividualRestClient;
+import banking.account.rest.client.TransactionRestClient;
 import banking.account.service.AccountCurrentService;
 import banking.commons.dto.AccountCurrentDTO;
+import banking.commons.dto.AmountDTO;
 import banking.commons.dto.IndividualDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +37,10 @@ public class AccountCurrentController {
     private final AccountCurrentService accountCurrentService;
 
     @Autowired
-    private RestClient individualRestClient;
+    private IndividualRestClient individualRestClient;
+
+    @Autowired
+    private TransactionRestClient transactionRestClient;
 
     //endpoint GET all accounts
     @GetMapping("/accounts-current")
@@ -68,7 +73,6 @@ public class AccountCurrentController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // return 404, with null body
     }
 
-
     @PatchMapping (path = "/account-current/update-balance/{iban}")
 //    @ResponseBody - return type is String - not needed                                       // nu este JSON -> { "balance": 20(balance)} -> facem obiectul updateBalanceRequestDTO
     public ResponseEntity<AccountCurrentDTO> updateAccountCurrentBalance(@PathVariable("iban") String iban, @RequestBody UpdateBalanceRequestDTO amount){
@@ -78,39 +82,42 @@ public class AccountCurrentController {
             return ResponseEntity.ok(accountCurrentDTO);
     }
 
-    //Recieve into account
-    //modify AccountCurrent to be credited with amount from the transaction
+    //Receive into account
+    //modify AccountCurrent to be credited with amount from the transaction,
+    // transaction must be made from this account to this account
+    // if the transaction is made fromIban then it's get debited from fromIban
+    // if the transaction is made toIban then it's get credited to toIban
+    // need to parse the fromIban to see from where the amount gets deducted and parse toIban -> where the amount gets added
     @PatchMapping(path = "/account-current/credit/{iban}")
     public ResponseEntity<AccountCurrentDTO> creditedAccountCurrent(@PathVariable("iban") String iban, @RequestBody CreditAccountCurrentDTO amount){
 
         Optional<AccountCurrentDTO> accountCurrentDTO = accountCurrentService.getByIban(iban);
 
+
         IndividualDTO individualDTOById = individualRestClient.getIndividualById(accountCurrentDTO.get().getIndividualId());
-        //TODO - AM NEVOIE DE UN ID AL TRANZACTIEI ?
-//        TransactionDTO transactionById = transactionRestClient.getTransactionById(accountCurrentDTO.get().);
+
+        //TODO - AM NEVOIE DE O TRANZACTIEI ?
+        String fromIban = accountCurrentDTO.get().getIban();
         //credit the value from AccountCurrent with the value from transaction -> go to debit
         AccountCurrentDTO creditBalanceAccount = accountCurrentService.creditBalanceAccount(iban, amount.getCreditAmount());
         creditBalanceAccount.setIndividual(individualDTOById);
 
         return ResponseEntity.ok(creditBalanceAccount);
-
     }
 
-    //Payment from account
+    //Payment from account                                                                           // change requestBody AmountDTO ???
     @PatchMapping(path = "/account-current/debit/{iban}")
-    public ResponseEntity<AccountCurrentDTO> debitedAccountCurrent(@PathVariable("iban") String iban, @RequestBody DebitAccountCurrentDTO amount){
+    public ResponseEntity<AccountCurrentDTO> debitedAccountCurrent(@PathVariable("iban") String iban, @RequestBody AmountDTO amount){
 
         Optional<AccountCurrentDTO> accountCurrentDTO = accountCurrentService.getByIban(iban);
         IndividualDTO individualById = individualRestClient.getIndividualById(accountCurrentDTO.get().getIndividualId());
 
-        //debit the value from AccountCurrent with the value from transaction
-        AccountCurrentDTO debitAccountCurrentDTO = accountCurrentService.debitBalanceAccount(iban, amount.getDebitAmount());
+        //debit the value from AccountCurrent with the value from transaction                     // amount from AmountDTO
+        AccountCurrentDTO debitAccountCurrentDTO = accountCurrentService.debitBalanceAccount(iban, amount.getAmount());
         debitAccountCurrentDTO.setIndividual(individualById);
 
         return ResponseEntity.ok(debitAccountCurrentDTO);
-
     }
-
 
     @GetMapping(value = "/account-current/{individualId}")
     public ResponseEntity<List<AccountCurrentDTO>> retrieveAccountIndividual(@PathVariable("individualId") int individualId){
@@ -126,9 +133,7 @@ public class AccountCurrentController {
             accountCurrent.setIndividual(individualDTO);
         }
         return ResponseEntity.ok(accountCurrentServiceByIndividual);
-
     }
-
 
     @PostMapping(value = "/create-account/individuals/{individualId}", produces = APPLICATION_JSON_VALUE, consumes = APPLICATION_JSON_VALUE )
     public ResponseEntity<AccountCurrentDTO> createAccountCurrent(@PathVariable("individualId") int individualId){
@@ -136,20 +141,14 @@ public class AccountCurrentController {
         AccountCurrentDTO individualAccount = accountCurrentService.createIndividualAccount(individualId);
         IndividualDTO individualDTOById = individualRestClient.getIndividualById(individualId);
 
-
         individualAccount.setIndividual(individualDTOById);
 
         return ResponseEntity.ok(individualAccount);
     }
 
-
     @DeleteMapping(value = "delete/account-current/{iban}")
     public void deleteAccountFromRepository(@PathVariable("iban") String iban){
 
         accountCurrentService.deleteAccountByIban(iban);
-
     }
-
-
-
 }

@@ -30,8 +30,6 @@ public class AccountCurrentServiceImpl implements AccountCurrentService {
     @Autowired
     private final AccountCurrentMapper accountCurrentMapper;
 
-
-
     @Override
     public List<AccountCurrentDTO> getAll() {
         return accountRepository.findAll()
@@ -89,7 +87,6 @@ public class AccountCurrentServiceImpl implements AccountCurrentService {
 
         return accountCurrentMapper.accountToDTO(savedAccountCurrent);
     }
-
 
     @Override
     public AccountCurrentDTO createIndividualAccount(int individualId) {
