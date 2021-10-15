@@ -8,6 +8,8 @@ logging:
 spring:
   devtools:
     add-properties: true
+  application:
+    name: mybank-current-accounts-service #-$idGen(String iban)
   datasource:
     url: jdbc:postgresql://localhost:5432/account_current
     username: admin

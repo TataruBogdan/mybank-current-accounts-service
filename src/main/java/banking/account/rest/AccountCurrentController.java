@@ -2,12 +2,11 @@ package banking.account.rest;
 
 
 import banking.account.dto.CreditAccountCurrentDTO;
+import banking.account.dto.DebitAccountCurrentDTO;
 import banking.account.dto.UpdateBalanceRequestDTO;
 import banking.account.rest.client.IndividualRestClient;
-import banking.account.rest.client.TransactionRestClient;
 import banking.account.service.AccountCurrentService;
 import banking.commons.dto.AccountCurrentDTO;
-import banking.commons.dto.AmountDTO;
 import banking.commons.dto.IndividualDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +37,6 @@ public class AccountCurrentController {
 
     @Autowired
     private IndividualRestClient individualRestClient;
-
-    @Autowired
-    private TransactionRestClient transactionRestClient;
 
     //endpoint GET all accounts
     @GetMapping("/accounts-current")
@@ -107,13 +103,13 @@ public class AccountCurrentController {
 
     //Payment from account                                                                           // change requestBody AmountDTO ???
     @PatchMapping(path = "/account-current/debit/{iban}")
-    public ResponseEntity<AccountCurrentDTO> debitedAccountCurrent(@PathVariable("iban") String iban, @RequestBody AmountDTO amount){
+    public ResponseEntity<AccountCurrentDTO> debitedAccountCurrent(@PathVariable("iban") String iban, @RequestBody DebitAccountCurrentDTO amount){
 
         Optional<AccountCurrentDTO> accountCurrentDTO = accountCurrentService.getByIban(iban);
         IndividualDTO individualById = individualRestClient.getIndividualById(accountCurrentDTO.get().getIndividualId());
 
         //debit the value from AccountCurrent with the value from transaction                     // amount from AmountDTO
-        AccountCurrentDTO debitAccountCurrentDTO = accountCurrentService.debitBalanceAccount(iban, amount.getAmount());
+        AccountCurrentDTO debitAccountCurrentDTO = accountCurrentService.debitBalanceAccount(iban, amount.getDebitAmount());
         debitAccountCurrentDTO.setIndividual(individualById);
 
         return ResponseEntity.ok(debitAccountCurrentDTO);

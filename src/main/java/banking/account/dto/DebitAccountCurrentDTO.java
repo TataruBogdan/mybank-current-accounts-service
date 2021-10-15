@@ -7,12 +7,5 @@ public class DebitAccountCurrentDTO {
 
     private Double debitAmount;
 
-//    public DebitAccountCurrentDTO(){
-//        super();
-//    }
-
-    public void debitAccountCurrent(Double debitAmount){
-        this.debitAmount = debitAmount;
-    }
 
 }

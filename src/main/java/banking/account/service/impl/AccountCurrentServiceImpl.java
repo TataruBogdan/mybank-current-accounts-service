@@ -1,6 +1,5 @@
 package banking.account.service.impl;
 
-
 import banking.account.dao.AccountRepository;
 import banking.account.model.AccountCurrent;
 import banking.account.service.AccountCurrentMapper;
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 
 import static banking.commons.dto.idGen.IdGenerator.idGen;
 import static banking.commons.dto.types.CurrentStatus.ACTIVE;
