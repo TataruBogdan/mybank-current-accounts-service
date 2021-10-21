@@ -1,8 +1,8 @@
 package banking.account.rest;
 
 
-import banking.account.dto.CreditAccountCurrentDTO;
-import banking.account.dto.DebitAccountCurrentDTO;
+import banking.commons.dto.CreditAccountCurrentDTO;
+import banking.commons.dto.DebitAccountCurrentDTO;
 import banking.account.dto.UpdateBalanceRequestDTO;
 import banking.account.rest.client.IndividualRestClient;
 import banking.account.service.AccountCurrentService;
@@ -84,6 +84,10 @@ public class AccountCurrentController {
     // if the transaction is made fromIban then it's get debited from fromIban
     // if the transaction is made toIban then it's get credited to toIban
     // need to parse the fromIban to see from where the amount gets deducted and parse toIban -> where the amount gets added
+    //TODO -Change Client Http from Rest Template
+    // eroar Failed to complete request: org.springframework.web.client.ResourceAccessException: I/O error on PATCH request for "http://localhost:8200/account-current/debit/CURR-984021567114147515": Invalid HTTP method: PATCH; nested exception is java.net.ProtocolException: Invalid HTTP method: PATCH .... SI PROBLEMA ESTE This is due to HttpURLConnection only allowing the following HTTP methods: /* valid HTTP methods */
+    // private static final String[] methods = {
+    //    "GET", "POST", "HEAD", "OPTIONS", "PUT", "DELETE", "TRACE"
     @PatchMapping(path = "/account-current/credit/{iban}")
     public ResponseEntity<AccountCurrentDTO> creditedAccountCurrent(@PathVariable("iban") String iban, @RequestBody CreditAccountCurrentDTO amount){
 
@@ -92,7 +96,6 @@ public class AccountCurrentController {
 
         IndividualDTO individualDTOById = individualRestClient.getIndividualById(accountCurrentDTO.get().getIndividualId());
 
-        //TODO - AM NEVOIE DE O TRANZACTIEI ?
         String fromIban = accountCurrentDTO.get().getIban();
         //credit the value from AccountCurrent with the value from transaction -> go to debit
         AccountCurrentDTO creditBalanceAccount = accountCurrentService.creditBalanceAccount(iban, amount.getCreditAmount());
