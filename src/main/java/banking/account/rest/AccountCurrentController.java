@@ -98,7 +98,7 @@ public class AccountCurrentController {
 
         String fromIban = accountCurrentDTO.get().getIban();
         //credit the value from AccountCurrent with the value from transaction -> go to debit
-        AccountCurrentDTO creditBalanceAccount = accountCurrentService.creditBalanceAccount(iban, amount.getCreditAmount());
+        AccountCurrentDTO creditBalanceAccount = accountCurrentService.creditBalanceAccount(iban, amount.getAmount());
         creditBalanceAccount.setIndividual(individualDTOById);
 
         return ResponseEntity.ok(creditBalanceAccount);
@@ -112,7 +112,7 @@ public class AccountCurrentController {
         IndividualDTO individualById = individualRestClient.getIndividualById(accountCurrentDTO.get().getIndividualId());
 
         //debit the value from AccountCurrent with the value from transaction                     // amount from AmountDTO
-        AccountCurrentDTO debitAccountCurrentDTO = accountCurrentService.debitBalanceAccount(iban, amount.getDebitAmount());
+        AccountCurrentDTO debitAccountCurrentDTO = accountCurrentService.debitBalanceAccount(iban, amount.getAmount());
         debitAccountCurrentDTO.setIndividual(individualById);
 
         return ResponseEntity.ok(debitAccountCurrentDTO);
