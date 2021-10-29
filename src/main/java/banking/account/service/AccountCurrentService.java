@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface AccountCurrentService {
 
-
     List<AccountCurrentDTO> getAll();
     Optional<AccountCurrentDTO> getByIban(String iban);
     List<AccountCurrentDTO> getByIndividualId(int individualId);
